@@ -7,10 +7,9 @@
       <Description>Customization of ZenProxy Intersystems to be enable to send numeric attributes in String format.</Description>
       <Keywords>custom zen proxy</Keywords>
       <Packaging>module</Packaging>
-      <Resource Name="!!!!ompare.PKG"/>
-      <SourcesRoot>src</SourcesRoot>
-      <Resource Name="!!!ompare.SourceHandler.Routine.CLS"/>
-      <Resource Name="!!ompare.SourceHandler.SQLTable.CLS"/>
+      <SourcesRoot>udl</SourcesRoot>
+      <Resource Name="%ZEN.Utils.INC"/>
+      <Resource Name="%ZEN.proxyObject.CLS"/>
     </Module>
   </Document>
 </Export>

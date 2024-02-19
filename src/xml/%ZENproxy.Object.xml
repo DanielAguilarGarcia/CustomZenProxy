@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="IRIS" version="26" zv="IRIS for Windows (x86-64) 2019.1.1 (Build 612U)" ts="2022-10-10 22:15:57">
-<Class name="%ZEN.proxyObject">
+<Class name="%ZENproxy.Object">
 <Copyright>/* Copyright (c) 2019 by InterSystems Corporation.
    Cambridge, Massachusetts, U.S.A.  All rights reserved.
    Confidential property of InterSystems Corporation. */</Copyright>
@@ -9,9 +9,9 @@ The Zen Proxy class provides a way to assemble data that can be
 conveniently passed between the web client and the server.
 It works in conjunction with the <b>zenProxy</b> JavaScript class
 defined in <i>zenutils.js</i>. The <b>zenProxy</b> class is
-the client-side representation of the server-side <class>%ZEN.proxyObject</class>
+the client-side representation of the server-side <class>%ZENproxy.Object</class>
 class and vice versa.<br/>
-The <class>%ZEN.proxyObject</class> class is useful for cases where
+The <class>%ZENproxy.Object</class> class is useful for cases where
 you do not know what run-time properties will exist when you are designing
 your application (perhaps it is user-configurable).<br/>
 The proxy class can be used in several ways. You can use it to send
@@ -29,13 +29,13 @@ simply by setting them.
 These properties should have <em>literal</em> values, that is, they
 should not refer to other JavaScript objects.<br/>
 If you define a server-side ZenMethod whose signature includes an
-argument of type <class>%ZEN.proxyObject</class>, then you can invoke
+argument of type <class>%ZENproxy.Object</class>, then you can invoke
 this method from the client passing it an instance of a <b>zenProxy</b>
 object. Zen will automatically marshal the values in the <b>zenProxy</b>
-object into an instance of the <class>%ZEN.proxyObject</class> object.<br/>
+object into an instance of the <class>%ZENproxy.Object</class> object.<br/>
 For example, suppose you have defined a server method:
 <example language="cls!member">
-ClassMethod MyMethod(pProxy as %ZEN.proxyObject) As %Boolean [ZenMethod]
+ClassMethod MyMethod(pProxy as %ZENproxy.Object) As %Boolean [ZenMethod]
 {
 	Set tName = pProxy.name
 	Set tCode = pProxy.code
@@ -52,13 +52,13 @@ an instance of <b>zenProxy</b> as the <var>pProxy</var> argument:
 </example>
 The <method>MyMethod</method> method will see the values 'Smith' and 'CRM114' for the properties
 <property>name</property> and <property>code</property>, respectively.<br/>
-You can also use the <class>%ZEN.proxyObject</class> class to pass values
+You can also use the <class>%ZENproxy.Object</class> class to pass values
 from a server method back to the client. To do this, create a server method
-whose return type is <class>%ZEN.proxyObject</class>:
+whose return type is <class>%ZENproxy.Object</class>:
 <example language="cls!member">
-ClassMethod GetServerInfo() As %ZEN.proxyObject [ZenMethod]
+ClassMethod GetServerInfo() As %ZENproxy.Object [ZenMethod]
 {
-	Set tProxy = ##class(%ZEN.proxyObject).%New()
+	Set tProxy = ##class(%ZENproxy.Object).%New()
 	Set tProxy.whatever = "Some server value"
 	Quit tProxy
 }
@@ -68,13 +68,13 @@ The client can invoke this method and use its return value as an object:
 	var obj = this.GetServerInfo();
 	alert(obj.whatever);
 </example>
-The <class>%ZEN.proxyObject</class> does not actually define any
+The <class>%ZENproxy.Object</class> does not actually define any
 properties. Instead it maintains an internal array of property names
 along with their corresponding values and uses dynamic dispatch
 to handle references to specific properties. This means that there
-is no name checking for properties of <class>%ZEN.proxyObject</class> 
+is no name checking for properties of <class>%ZENproxy.Object</class> 
 (the same behavior as JavaScript objects). You can remove the current set of
-properties within a <class>%ZEN.proxyObject</class> object using
+properties within a <class>%ZENproxy.Object</class> object using
 the <method>%Clear</method> method. You can find out what the
 current set of properties is (as a local array) or supply a new set
 using the <method>%CopyToArray</method> and <method>%CopyFromArray</method> methods.<br/>
@@ -84,7 +84,7 @@ from the object. In all other ways, you can treat is an instance
 of JavaScript <b>Object</b>.<br/>
 You can get the set of values within a <class>%ZEN.Auxiliary.dataController</class>
 objects using its <method>getDataAsObject</method> method.<br/>
-When using the <class>%ZEN.proxyObject</class> class keep the following
+When using the <class>%ZENproxy.Object</class> class keep the following
 things in mind:
 <ul>
 <li>All properties must have literal values (numbers or strings).</li>
@@ -93,17 +93,17 @@ and server environments. This means that names have to agree in case. It
 also means that you cannot have two properties with the same name
 but different case.</li>
 </ul>
-Note that <class>%ZEN.proxyObject</class> DOES support
+Note that <class>%ZENproxy.Object</class> DOES support
 various property names that are valid in Javascript but were not traditionally
 valid Objectscript property names. In general, these property names include symbols like
 "$" and "_" that are relatively common in Javascript. To reference such a property in a
-<class>%ZEN.proxyObject</class> instance, simply delimit the property name using quotes:
+<class>%ZENproxy.Object</class> instance, simply delimit the property name using quotes:
 <example>
 Set myProperty = tProxy."my_property"
 Set tProxy."$$foo" = "bar"
 </example>]]></Description>
 <Final>1</Final>
-<IncludeCode>%ZEN.Utils</IncludeCode>
+<IncludeCode>%ZENproxy.Utils</IncludeCode>
 <Super>%RegisteredObject</Super>
 <System>3</System>
 <TimeChanged>66392,80013.58171</TimeChanged>
@@ -218,7 +218,7 @@ Set tProxy."$$foo" = "bar"
 	Set $ZT = "Trap"
 
 	// CRC is class name in this case
-	If ("%ZEN.proxyObject"'=$P(pState,$C(1),1)) { Quit $$$ERROR($$$GeneralError,"Server version of object does not match version sent from the client."_..%ClassName(1)) } 
+	If ("%ZENproxy.Object"'=$P(pState,$C(1),1)) { Quit $$$ERROR($$$GeneralError,"Server version of object does not match version sent from the client."_..%ClassName(1)) } 
 
 	Set ..%index = $P(pState,$C(1),2)
 	Kill ..%data
@@ -268,7 +268,7 @@ Trap
 		Set tState = tState _ $S(tState="":"",1:$C(1)) _ tProp_$C(5)_$G(..%data(tProp))
 		Set tProp = $O(..%data(tProp))
 	}
-	Quit "%ZEN.proxyObject"_$C(1,1)_tState
+	Quit "%ZENproxy.Object"_$C(1,1)_tState
 ]]></Implementation>
 </Method>
 
@@ -281,15 +281,15 @@ Trap
 <Internal>1</Internal>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>pState:%String</FormalSpec>
-<ReturnType>%ZEN.proxyObject</ReturnType>
+<ReturnType>%ZENproxy.Object</ReturnType>
 <Implementation><![CDATA[
 	Set tObj = ""
-	If ($IsObject(pState) && pState.%IsA("%ZEN.proxyObject")) {
+	If ($IsObject(pState) && pState.%IsA("%ZENproxy.Object")) {
 		#; if we are passed an object, return it.
 		Quit pState
 	}
 
-	If ($P(pState,$C(6),1)="%ZEN.proxyObject") {
+	If ($P(pState,$C(6),1)="%ZENproxy.Object") {
 		Set tObj = ..%New()
 		Set tLen = $L(pState,$C(6))
 		For n = 3:1:tLen {
@@ -312,7 +312,7 @@ Drill down just enough to find out if the object has any content displayable as 
 <Implementation><![CDATA[
 	Set tHas=0, tProp="" For { Set tProp=$O(..%data(tProp),1,tValue)  Quit:""=tProp
 		If $IsObject(tValue) {
-			If tValue.%IsA("%ZEN.proxyObject") {
+			If tValue.%IsA("%ZENproxy.Object") {
 				If pFormat["o" || tValue.hasJSONContent(pFormat) {
 					Set tHas=1  Quit
 				}
@@ -370,7 +370,7 @@ w - Windows-style cr/lf newline<br/>]]></Description>
 		}
 		Set tProp="" For { Set tProp=$O(..%data(tProp),1,tValue)  Quit:""=tProp
 			If $IsObject(tValue) {
-				If tValue.%IsA("%ZEN.proxyObject") {
+				If tValue.%IsA("%ZENproxy.Object") {
 					
 					Set tValue.forceStringFormat	= ..forceStringFormat
 					Set tValue.excludeStringformat	= ..excludeStringformat
@@ -438,7 +438,7 @@ nextProp
 		Write ?(pLevel*4),tProp,": "
 		Set tValue = $G(..%data(tProp))
 		If $IsObject(tValue) {
-			If tValue.%IsA("%ZEN.proxyObject") {
+			If tValue.%IsA("%ZENproxy.Object") {
 				Do tValue.%Print(pLevel+1)
 			}
 			ElseIf (tValue.%IsA("%Collection.AbstractList")) {
@@ -446,7 +446,7 @@ nextProp
 				For n=1:1:tValue.Count() {
 					Write ?(pLevel+2),"[",n,"] "
 					Set tItem = tValue.GetAt(n)
-					If ($IsObject(tItem)&&tItem.%IsA("%ZEN.proxyObject")) {
+					If ($IsObject(tItem)&&tItem.%IsA("%ZENproxy.Object")) {
 						Do tItem.%Print(pLevel+1)
 					}
 					Else {
@@ -497,7 +497,7 @@ Enumerate the contents of this proxy object, calling Client for each node</Descr
 			If $IsObject(tValue) {
 				
 				// if it's a nested proxy object ..
-				If tValue.%IsA("%ZEN.proxyObject") {
+				If tValue.%IsA("%ZENproxy.Object") {
 					
 					// recurse
 					Set tSC = tValue.Enumerate(Client,pLevel+1) If $$$ISERR(tSC) Quit
@@ -516,7 +516,7 @@ Enumerate the contents of this proxy object, calling Client for each node</Descr
 						If ($IsObject(tItem)) {
 							
 							// if it's a nested proxy object ..
-							If (tItem.%IsA("%ZEN.proxyObject")) {
+							If (tItem.%IsA("%ZENproxy.Object")) {
 								
 								// recurse
 								Set tSC = tItem.Enumerate(Client,pLevel+1) If $$$ISERR(tSC) Quit
@@ -540,7 +540,7 @@ Enumerate the contents of this proxy object, calling Client for each node</Descr
 						If ($IsObject(tItem)) {
 							
 							// if it's a nested proxy object ..
-							If (tItem.%IsA("%ZEN.proxyObject")) {
+							If (tItem.%IsA("%ZENproxy.Object")) {
 								
 								// recurse
 								Set tSC = tItem.Enumerate(Client,pLevel+1) If $$$ISERR(tSC) Quit
@@ -665,7 +665,7 @@ Parameters
 <Method name="OpenDocument">
 <Description><![CDATA[
 OpenDocument will retrieve a previously saved document from the specified global or local variable reference (GLVN) with the specified <var>pDocumentID</var> 
-and return an oref referencing an instance of %ZEN.proxyObject. 
+and return an oref referencing an instance of %ZENproxy.Object. 
 If a document with the specified ID does not exist in that GLVN then OpenDocument will return an error in the output pStatus parameter.
 	<p>
 <table border=1>
@@ -696,7 +696,7 @@ Parameters
 </p>]]></Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>pWhere:%ZEN.Datatype.string,pDocumentID:%ZEN.Datatype.string,*pStatus:%Status=""</FormalSpec>
-<ReturnType>%ZEN.proxyObject</ReturnType>
+<ReturnType>%ZENproxy.Object</ReturnType>
 <Implementation><![CDATA[
 	try {
 		if $Data(@pWhere@(pDocumentID)) {
@@ -721,7 +721,7 @@ Parameters
 						// tOREF is an index on objectID so that we can resolve object references from multiple properties/objects
 					set tOREF(tObjectID) = tObject
 					if $Isobject(tOQ(tOQPtr,1)) {
-						if (tOQ(tOQPtr,1).%IsA("%ZEN.proxyObject")) {
+						if (tOQ(tOQPtr,1).%IsA("%ZENproxy.Object")) {
 							set $property(tOQ(tOQPtr,1),tOQ(tOQPtr,2)) = tObject
 						}
 						else {
@@ -729,7 +729,7 @@ Parameters
 						}
 					}
 						// If we stop supporting generic collection objects for dynamic lists then we can change this code.
-					if (tObject.%IsA("%ZEN.proxyObject")) {
+					if (tObject.%IsA("%ZENproxy.Object")) {
 						do ..loadObject(tObject,pWhere,pDocumentID,tObjectID,.tOQ,.tOREF)
 					}
 					else {
@@ -760,7 +760,7 @@ Parameters
 <Method name="OpenEmbeddedDocument">
 <Description><![CDATA[
 OpenEmbeddedDocument will retrieve a document embedded in a previously saved document from the specified global or local variable reference (GLVN) with the specified <var>pDocumentID</var> 
-and return an oref referencing an instance of %ZEN.proxyObject. 
+and return an oref referencing an instance of %ZENproxy.Object. 
 If a document with the specified documentID does not exist in that GLVN then OpenDocument will return an error in the output pStatus parameter. 
 If an embedded document with the specified objectID does not exist in that GLVN then OpenDocument will return an error in the output pStatus parameter. 
 	<p>
@@ -799,7 +799,7 @@ Parameters
 </p>]]></Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>pWhere:%ZEN.Datatype.string,pDocumentID:%ZEN.Datatype.string,pObjectID:%ZEN.Datatype.string,*pStatus:%Status=""</FormalSpec>
-<ReturnType>%ZEN.proxyObject</ReturnType>
+<ReturnType>%ZENproxy.Object</ReturnType>
 <Implementation><![CDATA[
 	try {
 		if $Data(@pWhere@(pDocumentID,pObjectID),tType) {
@@ -822,7 +822,7 @@ Parameters
 					// tOREF is an index on objectID so that we can resolve object references from multiple properties/objects
 				set tOREF(tObjectID) = tObject
 				if $Isobject(tOQ(tOQPtr,1)) {
-					if (tOQ(tOQPtr,1).%IsA("%ZEN.proxyObject")) {
+					if (tOQ(tOQPtr,1).%IsA("%ZENproxy.Object")) {
 						set $property(tOQ(tOQPtr,1),tOQ(tOQPtr,2)) = tObject
 					}
 					else {
@@ -830,7 +830,7 @@ Parameters
 					}
 				}
 					// If we stop supporting generic collection objects for dynamic lists then we can change this code.
-				if (tObject.%IsA("%ZEN.proxyObject")) {
+				if (tObject.%IsA("%ZENproxy.Object")) {
 					do ..loadObject(tObject,pWhere,pDocumentID,tObjectID,.tOQ,.tOREF)
 				}
 				else {
@@ -909,7 +909,7 @@ Parameters
 					// Encode this value as an object
 				set @pWhere@(pDocumentID,tOQ(tOQPtr,1),tOQ(tOQPtr,2)) = $$$pdbEncodeReference(tObjectID)
 			}
-			if tObject.%IsA("%ZEN.proxyObject") {
+			if tObject.%IsA("%ZENproxy.Object") {
 				set tProperty = $Order(tObject.%data(""),1,tValue)
 				if tProperty '= "" {
 					do {
@@ -921,7 +921,7 @@ Parameters
 							set @pWhere@(pDocumentID,tObjectID,tProperty) = $$$pdbEncodeReference(tOID(+tValue))
 						}
 							// Queue the object so we can serialize it later
-						elseif (tValue.%IsA("%ZEN.proxyObject")) || (tValue.%IsA("%Collection.AbstractList")) {
+						elseif (tValue.%IsA("%ZENproxy.Object")) || (tValue.%IsA("%Collection.AbstractList")) {
 							set tOQ = tOQ + 1
 							set tOQ(tOQ) = tValue
 							set tOQ(tOQ,1) = tObjectID
@@ -949,7 +949,7 @@ Parameters
 							set @pWhere@(pDocumentID,tObjectID,tElement) = $$$pdbEncodeReference(tOID(+tValue))
 						}
 							// Queue the object so we can serialize it later
-						elseif tValue.%IsA("%ZEN.proxyObject") {
+						elseif tValue.%IsA("%ZENproxy.Object") {
 								// This mechanism does not allow for one oref to be referenced from multiple locations
 							set tOQ = tOQ + 1
 							set tOQ(tOQ) = tValue
@@ -1001,7 +1001,7 @@ Parameters
 				set tType = $Get(@pWhere@(pDocumentID,tObjectID))
 				set pOQ = pOQ + 1
 				set pOQ(pOQ) = tObjectID
-				set pOQ(pOQ,0) = $Select(tType="":##class(%ZEN.proxyObject).%New(),1:##class(%Library.ListOfDataTypes).%New())
+				set pOQ(pOQ,0) = $Select(tType="":##class(%ZENproxy.Object).%New(),1:##class(%Library.ListOfDataTypes).%New())
 				set pOQ(pOQ,1) = pObject
 				set pOQ(pOQ,2) = tProperty
 			}
@@ -1037,7 +1037,7 @@ Parameters
 				set tType = $Get(@pWhere@(pDocumentID,tObjectID))
 				set pOQ = pOQ + 1
 				set pOQ(pOQ) = tObjectID
-				set pOQ(pOQ,0) = $Select(tType="":##class(%ZEN.proxyObject).%New(),1:##class(%Library.ListOfDataTypes).%New())
+				set pOQ(pOQ,0) = $Select(tType="":##class(%ZENproxy.Object).%New(),1:##class(%Library.ListOfDataTypes).%New())
 				set pOQ(pOQ,1) = pObject
 				set pOQ(pOQ,2) = tProperty
 			}
